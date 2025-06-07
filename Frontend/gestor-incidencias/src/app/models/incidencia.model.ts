@@ -1,3 +1,6 @@
+export type Prioritat = 'baixa' | 'mitja' | 'alta' | 'crítica';
+export type Estat = 'oberta' | 'assignada' | 'solucionada' | 'tancada';
+
 export interface Incidencia {
   id?: string;
   titulo: string;

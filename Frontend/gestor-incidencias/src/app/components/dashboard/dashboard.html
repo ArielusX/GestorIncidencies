@@ -1,4 +1,155 @@
-<div class="container mt-4">
-  <h2>Bienvenido, {{ username }} (rol: {{ rol }})</h2>
-  <div class="alert alert-info">Este es tu panel de control.</div>
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h1 class="display-4 text-primary">Dashboard d'Incidències</h1>
+      <p class="lead">Benvingut/da, <strong>{{ username }}</strong> 
+        <span class="badge bg-secondary ms-2">{{ rol }}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Dashboard para Admin -->
+  <div *ngIf="rol === 'admin'" class="admin-dashboard">
+    
+
+
+    <!-- Top 5 técnicos -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title h5 mb-0">Top 5 Tècnics amb més Incidències Tancades</h3>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              <div *ngFor="let tecnic of tecnicsTop5; let i = index" 
+                   class="list-group-item d-flex align-items-center">
+                <span class="badge bg-primary rounded-pill me-3">{{ i + 1 }}</span>
+                <div class="flex-grow-1">
+                  <h6 class="mb-0">{{ tecnic.nombre }}</h6>
+                  <small class="text-muted">{{ tecnic.incidenciasTancades }} incidències tancades</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista completa de incidencias -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title h5 mb-0">Totes les Incidències</h3>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Títol</th>
+                    <th>Prioritat</th>
+                    <th>Estat</th>
+                    <th>Usuari</th>
+                    <th>Data</th>
+                    <th>Assignat</th>
+                  </tr>
+                </thead>
+
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard para Técnico -->
+  <div *ngIf="rol === 'tecnic'" class="tech-dashboard">
+    
+    <!-- Estadísticas -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="h4 mb-3">Resum d'Incidències</h2>
+      </div>
+      <div *ngFor="let estat of estats" class="col-md-3 col-sm-6 mb-3">
+      </div>
+    </div>
+
+    <!-- Incidencias asignadas -->
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h2 class="h4">Les meves Incidències Assignades</h2>
+      </div>
+      <div *ngFor="let incident of getIncidenciesAssignades()" class="col-lg-6 col-xl-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-start">
+            <h5 class="card-title mb-2 text-truncate">{{ incident.titol }}</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ incident.descripcio }}</p>
+            <div class="mt-auto">
+              <small class="text-muted d-block">Creat per: {{ incident.usuariCreador }}</small>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent">
+            <button class="btn btn-primary btn-sm me-2">Veure Detalls</button>
+            <button class="btn btn-outline-success btn-sm">Marcar Resolt</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="getIncidenciesAssignades().length === 0" class="col-12">
+        <div class="alert alert-info text-center">
+          <i class="bi bi-check-circle me-2"></i>
+          No tens incidències assignades actualment.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard para Usuario Básico -->
+  <div *ngIf="rol === 'basic'" class="basic-dashboard">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <h2 class="h4">Les meves Incidències</h2>
+      </div>
+      <div *ngFor="let incident of getIncidenciesUsuari()" class="col-lg-6 col-xl-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-start">
+            <h5 class="card-title mb-2 text-truncate">{{ incident.titol }}</h5>
+            <div class="d-flex gap-1 flex-shrink-0 ms-2">
+
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ incident.descripcio }}</p>
+            
+            <!-- Información adicional -->
+
+            
+            <!-- Solución si existe -->
+            <div *ngIf="incident.solucio" class="alert alert-success border-start border-4 border-success">
+              <h6 class="alert-heading">Solució:</h6>
+              <p class="mb-0 small">{{ incident.solucio }}</p>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent" *ngIf="incident.estat === 'oberta' || incident.estat === 'assignada'">
+            <small class="text-muted">
+              <i class="bi bi-clock me-1"></i>
+              En procés de resolució...
+            </small>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="getIncidenciesUsuari().length === 0" class="col-12">
+        <div class="alert alert-info text-center">
+          <i class="bi bi-plus-circle me-2"></i>
+          No has creat cap incidència encara.
+          <a href="#" class="btn btn-primary ms-3">Crear Nova Incidència</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
