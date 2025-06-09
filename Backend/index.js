@@ -29,7 +29,7 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/auth.routes');
 const incidenciaRoutes = require('./routes/incidencias.routes');
-
+const userRoutes = require('./routes/users');
 
 
 const app = express();
@@ -45,8 +45,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use('/api/auth', authRoutes);
 app.use('/api/incidencias', incidenciaRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en puerto ${PORT}`);
+  console.log(`Servidor escuchando en puerto ${PORT}`);
 });

@@ -7,6 +7,7 @@ router.use(authMiddleware.verifyToken);
 
 router.get('/', incidenciasController.getAll);
 router.post('/', incidenciasController.create);
+router.get('/:id', incidenciasController.getById);
 router.put('/:id', incidenciasController.update);
 router.delete('/:id', incidenciasController.remove);
 

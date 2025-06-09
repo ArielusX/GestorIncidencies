@@ -1,1 +1,43 @@
-<p>usuario-form works!</p>
+<div class="container mt-4">
+  <h2>Crear nuevo usuario</h2>
+
+  <form [formGroup]="form" (ngSubmit)="crearUsuario()">
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="username"
+        [class.is-invalid]="enviado && form.controls['username'].invalid">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        formControlName="email"
+        [class.is-invalid]="enviado && form.controls['email'].invalid">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+        [class.is-invalid]="enviado && form.controls['password'].invalid">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Rol</label>
+      <select class="form-select" formControlName="role">
+        <option *ngFor="let rol of roles" [value]="rol">{{ rol }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <button type="submit" class="btn btn-primary">Crear usuario</button>
+  </form>
+</div>

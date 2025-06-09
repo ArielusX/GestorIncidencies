@@ -1,0 +1,44 @@
+
+
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%);
+  }
+
+  .card-hover {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  .card {
+    padding: 10px;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .table-responsive {
+    border-radius: 0.375rem;
+  }
+
+  .list-group-item:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+
+  .me-1 {
+    margin-right: 0 !important;
+  }
+
+  .bagde {
+    padding: 7px;
+  }
+
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2rem;
+    }
+
+    .card-body .btn-lg {
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+    }
+  }

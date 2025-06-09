@@ -6,7 +6,7 @@ const incidenciaSchema = new mongoose.Schema({
   estado: String,
   prioridad: String,
   usuarioCreador: String,
-  usuarioAsignado: String,
+  tecnico: String,
   fechaCreacion: { type: Date, default: Date.now },
   solucion: String
 });

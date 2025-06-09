@@ -2,7 +2,7 @@ export type Prioritat = 'baixa' | 'mitja' | 'alta' | 'crítica';
 export type Estat = 'oberta' | 'assignada' | 'solucionada' | 'tancada';
 
 export interface Incidencia {
-  id?: string;
+  _id?: string;
   titulo: string;
   descripcion: string;
   imagenUrl?: string;
@@ -10,7 +10,7 @@ export interface Incidencia {
   estado: 'oberta' | 'assignada' | 'solucionada' | 'tancada';
   usuarioCreador: string;
   fechaCreacion: Date;
-  usuarioAsignado?: string;
+  tecnico?: string;
   solucion?: string;
   fechaSolucion?: Date;
 }
