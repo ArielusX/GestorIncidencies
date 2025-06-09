@@ -1,39 +1,48 @@
+// src/app/services/auth.service.ts
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 
 export interface Usuario {
   username: string;
-  fullName: string;
+  fullName?: string;
   email: string;
   password: string;
-  role: 'admin' | 'tecnic' | 'basic';
+  role?: 'admin' | 'tecnic' | 'basic';
+  token?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private usuarios: Usuario[] = [
-    { username: 'admin', fullName: 'Admin', email: 'admin@example.com', password: 'admin', role: 'admin' },
-    { username: 'tecnic1', fullName: 'Tecnic 1', email: 'tecnic1@example.com', password: '1234', role: 'tecnic' },
-    { username: 'basic1', fullName: 'Usuari Bàsic', email: 'basic1@example.com', password: 'abcd', role: 'basic' }
-  ];
-
+  private apiUrl = 'http://localhost:3000/api/auth';
   private usuarioActual: Usuario | null = null;
 
-  iniciarSesion(username: string, password: string): boolean {
-    const user = this.usuarios.find(u => u.username === username && u.password === password);
-    if (user) {
-      this.usuarioActual = user;
-      return true;
-    }
-    return false;
+  constructor(private http: HttpClient) {}
+
+  iniciarSesion(username: string, password: string): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.apiUrl}/login`, { username, password }).pipe(
+      tap(user => {
+        this.usuarioActual = user;
+        localStorage.setItem('usuario', JSON.stringify(user)); // Guardamos el usuario
+      })
+    );
   }
 
-  obtenerUsuarioAutenticado(): Usuario | null {
-    return this.usuarioActual;
+obtenerUsuarioAutenticado(): Usuario | null {
+  if (!this.usuarioActual) {
+    const guardado = localStorage.getItem('usuario');
+    if (guardado) {
+      this.usuarioActual = JSON.parse(guardado);
+    }
   }
+  console.log(this.usuarioActual)
+  return this.usuarioActual;
+}
 
   cerrarSesion() {
     this.usuarioActual = null;
+    localStorage.removeItem('usuario');
   }
 }
