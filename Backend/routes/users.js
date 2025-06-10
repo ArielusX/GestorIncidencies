@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
-// Crear usuario (POST /api/users)
+const SALT_ROUNDS = 10;
+
 router.post("/", async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
@@ -18,8 +20,11 @@ router.post("/", async (req, res) => {
       return res.status(409).json({ message: "Usuario o email ya existe" });
     }
 
-    // Crear y guardar usuario
-    const newUser = new User({ username, email, password, role });
+    // Hashear la contraseña antes de guardar
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+    // Crear y guardar usuario con contraseña hasheada
+    const newUser = new User({ username, email, password: hashedPassword, role });
     await newUser.save();
 
     res.status(201).json({ message: "Usuario creado exitosamente" });

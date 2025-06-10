@@ -40,7 +40,7 @@ export class UsuarioForm {
     if (this.form.invalid) return;
 
     this.usuarioService.crearUsuario(this.form.value).subscribe({
-      next: () => this.router.navigate(['/admin/usuarios']),
+      next: () => this.router.navigate(['/usuarios/listar']),
       error: err => this.error = err.error.message || 'Error al crear el usuario'
     });
   }

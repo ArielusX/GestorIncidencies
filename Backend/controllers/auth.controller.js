@@ -1,6 +1,10 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/User');
+const bcrypt = require('bcrypt');
+
+const SALT_ROUNDS = 10;
+
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
@@ -11,12 +15,11 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Usuario no encontrado' });
     }
 
-    // En producción usa bcrypt para comparar hash
-    if (user.password !== password) {
-      return res.status(401).json({ message: 'Contraseña incorrecta' });
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!isMatch) {
+    return res.status(401).json({ message: 'Contraseña incorrecta' });
     }
 
-    // Crear token JWT
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
