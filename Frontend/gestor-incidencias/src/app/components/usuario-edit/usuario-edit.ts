@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService, UsuarioNuevo } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-usuario-edit',
@@ -16,12 +17,14 @@ export class UsuarioEditarComponent implements OnInit {
   enviado = false;
   error = '';
   roles = ['admin', 'tecnic', 'basic'];
+    rol: String = '';
 
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+        private authService: AuthService
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -31,6 +34,10 @@ export class UsuarioEditarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const usuario = this.authService.obtenerUsuarioAutenticado();
+    if (usuario?.role) {
+      this.rol = usuario.role;
+    }
     this.id = this.route.snapshot.params['id'];
     this.usuarioService.obtenerUsuarioPorId(this.id).subscribe({
       next: usuario => this.form.patchValue(usuario),

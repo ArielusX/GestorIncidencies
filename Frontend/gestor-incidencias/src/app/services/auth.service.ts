@@ -1,7 +1,7 @@
-// src/app/services/auth.service.ts
+// auth.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface Usuario {
   username: string;
@@ -13,36 +13,51 @@ export interface Usuario {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api/auth';
-  private usuarioActual: Usuario | null = null;
+  private usuarioSubject = new BehaviorSubject<Usuario | null>(this.obtenerUsuarioLocalStorage());
 
   constructor(private http: HttpClient) {}
 
+  private obtenerUsuarioLocalStorage(): Usuario | null {
+    const guardado = localStorage.getItem('usuario');
+    return guardado ? JSON.parse(guardado) : null;
+  }
+
   iniciarSesion(username: string, password: string): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.apiUrl}/login`, { username, password }).pipe(
-      tap(user => {
-        this.usuarioActual = user;
-        localStorage.setItem('usuario', JSON.stringify(user)); // Guardamos el usuario
+      tap((user) => {
+        localStorage.setItem('usuario', JSON.stringify(user));
+        if (user.token) {
+          localStorage.setItem('token', user.token);
+        }
+        this.usuarioSubject.next(user);  // 🔁 Emite el nuevo usuario
       })
     );
   }
 
-obtenerUsuarioAutenticado(): Usuario | null {
-  if (!this.usuarioActual) {
-    const guardado = localStorage.getItem('usuario');
-    if (guardado) {
-      this.usuarioActual = JSON.parse(guardado);
-    }
+  obtenerUsuarioAutenticado(): Usuario | null {
+    return this.usuarioSubject.value;
   }
-  console.log(this.usuarioActual)
-  return this.usuarioActual;
+
+  getUsuarioObservable(): Observable<Usuario | null> {
+    return this.usuarioSubject.asObservable();
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.usuarioSubject.value;
+  }
+
+  getUserRole(): 'admin' | 'tecnic' | 'basic' | null {
+    return this.usuarioSubject.value?.role ?? null;
+  }
+
+  cerrarSesion(): void {
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('token');
+    this.usuarioSubject.next(null);  
+  }
 }
 
-  cerrarSesion() {
-    this.usuarioActual = null;
-    localStorage.removeItem('usuario');
-  }
-}

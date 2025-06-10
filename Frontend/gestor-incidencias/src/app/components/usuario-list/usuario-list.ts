@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-usuario-list',
@@ -12,10 +13,16 @@ import { CommonModule } from '@angular/common';
 export class UsuarioList implements OnInit {
   usuarios: any[] = [];
   error: string = '';
+  rol: String = '';
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router, private authService: AuthService) {}
 
-  ngOnInit(): void {
+
+    ngOnInit(): void {
+    const usuario = this.authService.obtenerUsuarioAutenticado();
+    if (usuario?.role) {
+      this.rol = usuario.role;
+    }
     this.obtenerUsuarios();
   }
 

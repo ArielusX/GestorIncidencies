@@ -30,12 +30,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-ticket-alt text-primary fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-primary">
               {{ getIncidenciesUsuari().length || 0 }}
             </h3>
@@ -46,12 +40,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-plus-circle text-secondary fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-secondary">
               {{ getIncidenciesUsuariByEstado('oberta') }}
             </h3>
@@ -62,12 +50,7 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-cog text-warning fa-lg"></i>
-            </div>
+
             <h3 class="h2 mb-1 text-warning">
               {{ getIncidenciesUsuariByEstado('assignada') +
               getIncidenciesUsuariByEstado('solucionada') }}
@@ -79,12 +62,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-check-circle text-success fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-success">
               {{ getIncidenciesUsuariByEstado('tancada') }}
             </h3>
@@ -405,12 +382,7 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-user-check text-primary fa-lg"></i>
-            </div>
+
             <h3 class="h2 mb-1 text-primary">
               {{ getIncidenciesAssignades().length || 0 }}
             </h3>
@@ -421,12 +393,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-clock text-warning fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-warning">
               {{ getIncidenciesAssignadesByEstado('assignada') }}
             </h3>
@@ -437,12 +403,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-wrench text-info fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-info">
               {{ getIncidenciesAssignadesByEstado('solucionada') }}
             </h3>
@@ -453,12 +413,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-check-circle text-success fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-success">
               {{ getIncidenciesAssignadesByEstado('tancada') }}
             </h3>
@@ -748,15 +702,17 @@
                         <i class="fas fa-hand-paper me-1"></i>Assignar-me
                       </button>
 
-                      <!-- Botón para marcar como solucionada -->
-                      <button
-                        *ngIf="i.estado === 'assignada' && i.tecnico === username"
-                        class="btn btn-outline-success btn-sm me-1"
-                        (click)="confirmarSolucion(i)"
-                        title="Marcar com solucionada"
-                      >
-                        <i class="fas fa-wrench me-1"></i>Solucionar
-                      </button>
+
+                    <!-- Botón para marcar como solucionada -->
+                    <button
+                      *ngIf="i.estado === 'assignada' && i.tecnico === username"
+                      class="btn btn-outline-success btn-sm me-1"
+                      (click)="mostrarModalSolucion(i)"
+                      title="Marcar com solucionada"
+                    >
+                      <i class="fas fa-wrench me-1"></i>Solucionar
+                    </button>
+
 
                       <!-- Botón para ver detalles -->
                       <button
@@ -800,12 +756,7 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-ticket-alt text-primary fa-lg"></i>
-            </div>
+
             <h3 class="h2 mb-1 text-primary">{{ incidencias?.length || 0 }}</h3>
             <p class="text-muted mb-0">Total Incidències</p>
           </div>
@@ -814,12 +765,7 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-check-circle text-success fa-lg"></i>
-            </div>
+
             <h3 class="h2 mb-1 text-success">
               {{ getIncidenciasByEstado('tancada') }}
             </h3>
@@ -830,12 +776,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-clock text-warning fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-warning">
               {{ getIncidenciasByEstado('assignada') }}
             </h3>
@@ -846,12 +786,6 @@
       <div class="col-md-3 col-sm-6 mb-4">
         <div class="card border-0 shadow-sm h-100 card-hover">
           <div class="card-body text-center">
-            <div
-              class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-              style="width: 60px; height: 60px"
-            >
-              <i class="fas fa-users text-info fa-lg"></i>
-            </div>
             <h3 class="h2 mb-1 text-info">{{ tecnicsTop5?.length || 0 }}</h3>
             <p class="text-muted mb-0">Tècnics Actius</p>
           </div>
@@ -1269,6 +1203,55 @@
           </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal para agregar solución -->
+<div class="modal fade" id="modalSolucion" tabindex="-1" aria-labelledby="modalSolucionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalSolucionLabel">
+          <i class="fas fa-wrench me-2"></i>Solució de la Incidència
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Incidència:</label>
+          <p class="text-muted">{{ incidenciaSeleccionada?.titulo }}</p>
+        </div>
+        <div class="mb-3">
+          <label for="solucionText" class="form-label fw-semibold">Descripció de la Solució: *</label>
+          <textarea
+            class="form-control"
+            id="solucionText"
+            rows="4"
+            [(ngModel)]="textoSolucion"
+            placeholder="Descriu la solució aplicada a aquesta incidència..."
+            required
+          ></textarea>
+        </div>
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          En confirmar, la incidència es marcarà com a <strong>solucionada</strong> i s'establirà automàticament la data de solució.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i>Cancel·lar
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-success"
+          (click)="confirmarSolucion()"
+          [disabled]="!textoSolucion || textoSolucion.trim().length === 0"
+        >
+          <i class="fas fa-check me-1"></i>Confirmar Solució
+        </button>
       </div>
     </div>
   </div>

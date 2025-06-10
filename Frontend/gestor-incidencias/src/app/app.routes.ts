@@ -8,18 +8,20 @@ import { UsuarioList } from './components/usuario-list/usuario-list';
 import { IncidenciaEdit } from './components/incidencia-edit/incidencia-edit';
 import { IncidenciaForm } from './components/incidencia-form/incidencia-form';
 import { IncidenciaDetallesComponent } from './components/incidencia-detalles/incidencia-detalles';
-
+import { AuthGuard } from './services/auth.guard';
+import { RoleGuard } from './services/role.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'usuarios/crear', component: UsuarioForm},
-  { path: 'usuarios/editar/:id', component: UsuarioEditarComponent },
-  { path: 'usuarios/listar', component: UsuarioList },
-  { path: 'incidencias/editar/:id', component: IncidenciaEdit },
-  { path: 'incidencias/crear', component: IncidenciaForm },
-  { path: 'incidencias/detalle/:id', component: IncidenciaDetallesComponent },
+  { path: 'login', component: LoginComponent},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'usuarios/crear', component: UsuarioForm, canActivate: [AuthGuard, RoleGuard]},
+  { path: 'usuarios/editar/:id', component: UsuarioEditarComponent, canActivate: [AuthGuard, RoleGuard] },
+  { path: 'usuarios/listar', component: UsuarioList, canActivate: [AuthGuard, RoleGuard] },
+  { path: 'incidencias/editar/:id', component: IncidenciaEdit, canActivate: [AuthGuard, RoleGuard] },
+  { path: 'incidencias/crear', component: IncidenciaForm , canActivate: [AuthGuard]},
+  { path: 'incidencias/detalle/:id', component: IncidenciaDetallesComponent , canActivate: [AuthGuard]},
+  { path: '**', redirectTo: '/' }
 
 ];
 

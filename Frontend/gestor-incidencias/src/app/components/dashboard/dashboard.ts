@@ -12,7 +12,7 @@ declare var bootstrap: any;
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule]
 })
 export class DashboardComponent implements OnInit {
   rol: string = '';
@@ -213,9 +213,20 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+    mostrarModalSolucion(incidencia: Incidencia) {
+    this.incidenciaSeleccionada = incidencia;
+    this.textoSolucion = '';
+    
+    // Mostrar modal usando Bootstrap
+    const modalElement = document.getElementById('modalSolucion');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
 
 
-confirmarSolucion(incidencia: any): void {
+/*confirmarSolucion(): void {
   console.log(incidencia)
 
 
@@ -225,7 +236,7 @@ confirmarSolucion(incidencia: any): void {
     fechaSolucion: new Date().toISOString(),
   };
 
-  console.log('Incidencia actualizada:', incidenciaActualizada);
+  
   this.incidenciaService.actualizarIncidencia(
     incidencia._id!,
     incidenciaActualizada
@@ -240,7 +251,41 @@ confirmarSolucion(incidencia: any): void {
       alert('Error al marcar la incidència com a solucionada');
     }
   });
-}
+}*/
+
+  confirmarSolucion() {
+    if (!this.incidenciaSeleccionada || !this.textoSolucion.trim()) {
+      return;
+    }
+
+  const incidenciaActualizada: Incidencia = {
+    ...this.incidenciaSeleccionada,
+    estado: 'solucionada',
+    fechaSolucion: new Date(),
+  };
+
+    this.incidenciaService.actualizarIncidencia(this.incidenciaSeleccionada._id!, incidenciaActualizada).subscribe({
+      next: () => {
+        alert('Incidència marcada com a solucionada');
+        this.cargarIncidencias();
+        
+        // Cerrar modal
+        const modalElement = document.getElementById('modalSolucion');
+        if (modalElement) {
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          modal?.hide();
+        }
+        
+        // Limpiar datos
+        this.incidenciaSeleccionada = null;
+        this.textoSolucion = '';
+      },
+      error: (error) => {
+        console.error('Error al solucionar incidència:', error);
+        alert('Error al marcar la incidència com a solucionada');
+      }
+    });
+  }
 
 
   // Métodos comunes (admin y técnico)

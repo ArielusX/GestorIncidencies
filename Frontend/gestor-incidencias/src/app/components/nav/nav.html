@@ -1,0 +1,27 @@
+<nav *ngIf="inLog()" class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+  <a class="navbar-brand" href="/dashboard" >
+     Gestor d'Incidencies
+  </a>
+
+  <div class="ms-auto" *ngIf="usuario">
+    <div class="dropdown">
+      <button
+        class="btn btn-secondary dropdown-toggle d-flex align-items-center"
+        type="button"
+        id="userDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <div class="rounded-circle bg-primary text-white text-center me-2" style="width: 32px; height: 32px; line-height: 32px;">
+          {{ getInicial() }}
+        </div>
+        {{ usuario.username }} 
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        <li class="dropdown-item text-muted">Rol: {{ usuario.role }}</li>
+        <li><hr class="dropdown-divider" /></li>
+        <li><a class="dropdown-item" href="#" (click)="cerrarSesion()">Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
