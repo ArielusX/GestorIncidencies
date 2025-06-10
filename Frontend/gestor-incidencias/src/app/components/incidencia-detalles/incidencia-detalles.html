@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h2>Detalls de la incidència</h2>
+
+  <div *ngIf="incidencia" class="card mt-3">
+    <div class="card-body">
+      <p><strong>Títol:</strong> {{ incidencia.titulo }}</p>
+      <p><strong>Descripció:</strong> {{ incidencia.descripcion }}</p>
+      <p><strong>Estat:</strong> {{ incidencia.estado }}</p>
+      <p><strong>Prioritat:</strong> {{ incidencia.prioridad }}</p>
+      <p><strong>Creat per:</strong> {{ incidencia.usuarioCreador }}</p>
+      <p><strong>Tècnic assignat:</strong> {{ incidencia.tecnico }}</p>
+      <p><strong>Data de creació:</strong> {{ incidencia.fechaCreacion  }}</p>
+
+      <ng-container *ngIf="incidencia.estado === 'solucionada' || incidencia.solucion">
+        <hr>
+        <p><strong>Solució:</strong> {{ incidencia.solucion }}</p>
+        <p><strong>Data de solució:</strong> {{ incidencia.fechaSolucion  }}</p>
+      </ng-container>
+
+      <button class="btn btn-secondary mt-3" (click)="volver()">Tornar</button>
+    </div>
+  </div>
+</div>

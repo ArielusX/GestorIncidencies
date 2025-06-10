@@ -7,6 +7,7 @@ import { UsuarioEditarComponent } from './components/usuario-edit/usuario-edit';
 import { UsuarioList } from './components/usuario-list/usuario-list';
 import { IncidenciaEdit } from './components/incidencia-edit/incidencia-edit';
 import { IncidenciaForm } from './components/incidencia-form/incidencia-form';
+import { IncidenciaDetallesComponent } from './components/incidencia-detalles/incidencia-detalles';
 
 
 export const routes: Routes = [
@@ -18,7 +19,7 @@ export const routes: Routes = [
   { path: 'usuarios/listar', component: UsuarioList },
   { path: 'incidencias/editar/:id', component: IncidenciaEdit },
   { path: 'incidencias/crear', component: IncidenciaForm },
-  
+  { path: 'incidencias/detalle/:id', component: IncidenciaDetallesComponent },
 
 ];
 

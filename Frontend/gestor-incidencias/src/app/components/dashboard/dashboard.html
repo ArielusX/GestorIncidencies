@@ -22,7 +22,775 @@
       </div>
     </div>
   </div>
-  
+  <!-- Sección para usuario básico -->
+  <div *ngIf="rol === 'basic'" class="basic-dashboard">
+    <!-- Stats Cards Row - Incidencias del Usuario -->
+    <div class="row mb-5">
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-ticket-alt text-primary fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-primary">
+              {{ getIncidenciesUsuari().length || 0 }}
+            </h3>
+            <p class="text-muted mb-0">Les Meves Incidències</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-plus-circle text-secondary fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-secondary">
+              {{ getIncidenciesUsuariByEstado('oberta') }}
+            </h3>
+            <p class="text-muted mb-0">Obertes</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-cog text-warning fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-warning">
+              {{ getIncidenciesUsuariByEstado('assignada') +
+              getIncidenciesUsuariByEstado('solucionada') }}
+            </h3>
+            <p class="text-muted mb-0">En Procés</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-check-circle text-success fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-success">
+              {{ getIncidenciesUsuariByEstado('tancada') }}
+            </h3>
+            <p class="text-muted mb-0">Tancades</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico y Acciones Row -->
+    <div class="row mb-5">
+      <!-- Gráfico de Estado de Incidencias -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-chart-pie text-primary"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">
+                  Les Meves Incidències
+                </h3>
+                <p class="text-muted small mb-0">Distribució per estat</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <div
+              class="chart-container"
+              style="position: relative; height: 250px"
+            >
+              <!-- Gráfico de barras simple -->
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Obertes</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-secondary"
+                        [style.width.%]="getProgressWidthUsuari('oberta')"
+                      >
+                        {{ getIncidenciesUsuariByEstado('oberta') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Assignades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-warning"
+                        [style.width.%]="getProgressWidthUsuari('assignada')"
+                      >
+                        {{ getIncidenciesUsuariByEstado('assignada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Solucionades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-info"
+                        [style.width.%]="getProgressWidthUsuari('solucionada')"
+                      >
+                        {{ getIncidenciesUsuariByEstado('solucionada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Tancades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-success"
+                        [style.width.%]="getProgressWidthUsuari('tancada')"
+                      >
+                        {{ getIncidenciesUsuariByEstado('tancada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Acciones -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-plus text-success"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">Accions Ràpides</h3>
+                <p class="text-muted small mb-0">
+                  Gestiona les teves incidències
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <!-- Filtros -->
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted"
+                >Filtrar per Estat:</label
+              >
+              <select class="form-select" [(ngModel)]="filtroEstado">
+                <option value="">Tots els estats</option>
+                <option value="oberta">Obertes</option>
+                <option value="assignada">Assignades</option>
+                <option value="solucionada">Solucionades</option>
+                <option value="tancada">Tancades</option>
+              </select>
+            </div>
+
+            <!-- Contador de incidencias -->
+            <div class="alert alert-info mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              <strong>{{ getIncidenciesUsuariVisible().length }}</strong>
+              incidències trobades
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <div class="d-grid gap-3">
+              <button
+                class="btn btn-outline-primary btn-lg d-flex align-items-center justify-content-between"
+                [routerLink]="['/incidencias/crear']"
+              >
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-plus-circle me-3"></i>
+                  <span>Nova Incidència</span>
+                </div>
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Incidencias del Usuario -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-list text-primary"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">
+                  Les Meves Incidències
+                </h3>
+                <p class="text-muted small mb-0">Incidències creades per tu</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-heading me-1"></i>Títol
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-exclamation-triangle me-1"></i>Prioritat
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-info-circle me-1"></i>Estat
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-user-cog me-1"></i>Tècnic
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-calendar me-1"></i>Data
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-cogs me-1"></i>Accions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let i of getIncidenciesUsuariVisible()"
+                    class="border-bottom"
+                  >
+                    <td class="py-3">
+                      <div class="fw-semibold">{{ i.titulo }}</div>
+                      <small class="text-muted"
+                        >{{ i.descripcion | slice:0:50 }}...</small
+                      >
+                    </td>
+                    <td class="py-3">
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                        'bg-danger': i.prioridad === 'crítica',
+                        'bg-warning': i.prioridad === 'alta',
+                        'bg-info': i.prioridad === 'mitja',
+                        'bg-secondary': i.prioridad === 'baixa'
+                      }"
+                      >
+                        {{ getPrioridadDisplay(i.prioridad) }}
+                      </span>
+                    </td>
+                    <td class="py-3">
+                      <span
+                        class="badge rounded-pill"
+                        [ngClass]="{
+                        'bg-success': i.estado === 'tancada',
+                        'bg-warning': i.estado === 'assignada',
+                        'bg-info': i.estado === 'solucionada',
+                        'bg-secondary': i.estado === 'oberta'
+                      }"
+                      >
+                        <i
+                          class="fas me-1"
+                          [ngClass]="{
+                          'fa-check': i.estado === 'tancada',
+                          'fa-clock': i.estado === 'assignada',
+                          'fa-wrench': i.estado === 'solucionada',
+                          'fa-plus': i.estado === 'oberta'
+                        }"
+                        ></i>
+                        {{ getEstadoDisplay(i.estado) }}
+                      </span>
+                    </td>
+                    <td class="py-3">
+                      <div *ngIf="i.tecnico" class="d-flex align-items-center">
+                        <div
+                          class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-2"
+                          style="width: 30px; height: 30px"
+                        >
+                          <i class="fas fa-user-cog text-info small"></i>
+                        </div>
+                        <span class="small">{{ i.tecnico }}</span>
+                      </div>
+                      <div *ngIf="!i.tecnico" class="text-muted small">
+                        <i class="fas fa-minus me-1"></i>Sense assignar
+                      </div>
+                    </td>
+                    <td class="py-3">
+                      <small class="text-muted"
+                        >{{ i.fechaCreacion | date: 'shortDate' }}</small
+                      >
+                      <div *ngIf="i.fechaSolucion">
+                        <small class="text-success">
+                          <i class="fas fa-check me-1"></i>{{ i.fechaSolucion |
+                          date: 'shortDate' }}
+                        </small>
+                      </div>
+                    </td>
+                    <td class="py-3">
+                      <!-- Botón para ver detalles -->
+                      <button
+                        class="btn btn-outline-info btn-sm"
+                        [routerLink]="['/incidencias/detalle', i._id]"
+                        title="Veure detalls"
+                      >
+                        <i class="fas fa-eye me-1"></i>Detalls
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Mensaje cuando no hay incidencias -->
+            <div
+              *ngIf="getIncidenciesUsuariVisible().length === 0"
+              class="text-center py-5"
+            >
+              <div class="text-muted">
+                <i class="fas fa-ticket-alt fa-3x mb-3 opacity-50"></i>
+                <h5>No tens incidències</h5>
+                <p class="mb-3">
+                  Encara no has creat cap incidència o no n'hi ha amb els
+                  filtres aplicats.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard para Técnico -->
+  <div *ngIf="rol === 'tecnic'" class="tecnic-dashboard">
+    <!-- Stats Cards Row - Incidencias Asignadas del Técnico -->
+    <div class="row mb-5">
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-user-check text-primary fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-primary">
+              {{ getIncidenciesAssignades().length || 0 }}
+            </h3>
+            <p class="text-muted mb-0">Assignades a Mi</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-clock text-warning fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-warning">
+              {{ getIncidenciesAssignadesByEstado('assignada') }}
+            </h3>
+            <p class="text-muted mb-0">En Procés</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-wrench text-info fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-info">
+              {{ getIncidenciesAssignadesByEstado('solucionada') }}
+            </h3>
+            <p class="text-muted mb-0">Solucionades</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card border-0 shadow-sm h-100 card-hover">
+          <div class="card-body text-center">
+            <div
+              class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+              style="width: 60px; height: 60px"
+            >
+              <i class="fas fa-check-circle text-success fa-lg"></i>
+            </div>
+            <h3 class="h2 mb-1 text-success">
+              {{ getIncidenciesAssignadesByEstado('tancada') }}
+            </h3>
+            <p class="text-muted mb-0">Tancades</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico y Filtros Row -->
+    <div class="row mb-5">
+      <!-- Gráfico de Estado de Incidencias -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-chart-pie text-primary"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">
+                  Les Meves Incidències
+                </h3>
+                <p class="text-muted small mb-0">Distribució per estat</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <div
+              class="chart-container"
+              style="position: relative; height: 250px"
+            >
+              <!-- Gráfico de barras simple -->
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Assignades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-warning"
+                        [style.width.%]="getProgressWidth('assignada')"
+                      >
+                        {{ getIncidenciesAssignadesByEstado('assignada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Solucionades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-info"
+                        [style.width.%]="getProgressWidth('solucionada')"
+                      >
+                        {{ getIncidenciesAssignadesByEstado('solucionada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Tancades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-success"
+                        [style.width.%]="getProgressWidth('tancada')"
+                      >
+                        {{ getIncidenciesAssignadesByEstado('tancada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Filtros y Acciones -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-filter text-info"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">Filtres i Accions</h3>
+                <p class="text-muted small mb-0">
+                  Gestiona les teves incidències
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <!-- Filtros -->
+            <div class="mb-3">
+              <label class="form-label small fw-semibold text-muted"
+                >Tipus de Vista:</label
+              >
+              <div class="btn-group w-100" role="group">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="vistaOptions"
+                  id="assignades"
+                  [(ngModel)]="vistaActual"
+                  value="assignades"
+                />
+                <label class="btn btn-outline-primary" for="assignades"
+                  >Les Meves</label
+                >
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="vistaOptions"
+                  id="obertes"
+                  [(ngModel)]="vistaActual"
+                  value="obertes"
+                />
+                <label class="btn btn-outline-primary" for="obertes"
+                  >Obertes</label
+                >
+              </div>
+            </div>
+
+            <!-- Filtro por estado (solo para incidencias asignadas) -->
+            <div class="mb-3" *ngIf="vistaActual === 'assignades'">
+              <label class="form-label small fw-semibold text-muted"
+                >Filtrar per Estat:</label
+              >
+              <select class="form-select" [(ngModel)]="filtroEstado">
+                <option value="">Tots els estats</option>
+                <option value="assignada">Assignades</option>
+                <option value="solucionada">Solucionades</option>
+                <option value="tancada">Tancades</option>
+              </select>
+            </div>
+
+            <!-- Contador de incidencias -->
+            <div class="alert alert-info mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              <strong>{{ getIncidenciesVisible().length }}</strong> incidències
+              trobades
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Incidencias -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-list text-primary"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">
+                  {{ vistaActual === 'assignades' ? 'Les Meves Incidències' :
+                  'Incidències Obertes' }}
+                </h3>
+                <p class="text-muted small mb-0">{{ getDescripcionVista() }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-heading me-1"></i>Títol
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-exclamation-triangle me-1"></i>Prioritat
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-info-circle me-1"></i>Estat
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-user me-1"></i>Usuari
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-calendar me-1"></i>Data
+                    </th>
+                    <th class="border-0 fw-semibold text-muted small py-3">
+                      <i class="fas fa-cogs me-1"></i>Accions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let i of getIncidenciesVisible()"
+                    class="border-bottom"
+                  >
+                    <td class="py-3">
+                      <div class="fw-semibold">{{ i.titulo }}</div>
+                      <small class="text-muted"
+                        >{{ i.descripcion | slice:0:50 }}...</small
+                      >
+                    </td>
+                    <td class="py-3">
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                        'bg-danger': i.prioridad === 'crítica',
+                        'bg-warning': i.prioridad === 'alta',
+                        'bg-info': i.prioridad === 'mitja',
+                        'bg-secondary': i.prioridad === 'baixa'
+                      }"
+                      >
+                        {{ getPrioridadDisplay(i.prioridad) }}
+                      </span>
+                    </td>
+                    <td class="py-3">
+                      <span
+                        class="badge rounded-pill"
+                        [ngClass]="{
+                        'bg-success': i.estado === 'tancada',
+                        'bg-warning': i.estado === 'assignada',
+                        'bg-info': i.estado === 'solucionada',
+                        'bg-secondary': i.estado === 'oberta'
+                      }"
+                      >
+                        <i
+                          class="fas me-1"
+                          [ngClass]="{
+                          'fa-check': i.estado === 'tancada',
+                          'fa-clock': i.estado === 'assignada',
+                          'fa-wrench': i.estado === 'solucionada',
+                          'fa-plus': i.estado === 'oberta'
+                        }"
+                        ></i>
+                        {{ getEstadoDisplay(i.estado) }}
+                      </span>
+                    </td>
+                    <td class="py-3">
+                      <div class="d-flex align-items-center">
+                        <div
+                          class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-2"
+                          style="width: 30px; height: 30px"
+                        >
+                          <i class="fas fa-user text-primary small"></i>
+                        </div>
+                        <span class="small">{{ i.usuarioCreador }}</span>
+                      </div>
+                    </td>
+                    <td class="py-3">
+                      <small class="text-muted"
+                        >{{ i.fechaCreacion | date: 'shortDate' }}</small
+                      >
+                      <div *ngIf="i.fechaSolucion">
+                        <small class="text-success">
+                          <i class="fas fa-check me-1"></i>{{ i.fechaSolucion |
+                          date: 'shortDate' }}
+                        </small>
+                      </div>
+                    </td>
+                    <td class="py-3">
+                      <!-- Botón para asignarse incidencia abierta -->
+                      <button
+                        *ngIf="i.estado === 'oberta' && !i.tecnico"
+                        class="btn btn-outline-primary btn-sm me-1"
+                        (click)="assignarseIncidencia(i._id!)"
+                        title="Assignar-me aquesta incidència"
+                      >
+                        <i class="fas fa-hand-paper me-1"></i>Assignar-me
+                      </button>
+
+                      <!-- Botón para marcar como solucionada -->
+                      <button
+                        *ngIf="i.estado === 'assignada' && i.tecnico === username"
+                        class="btn btn-outline-success btn-sm me-1"
+                        (click)="confirmarSolucion(i)"
+                        title="Marcar com solucionada"
+                      >
+                        <i class="fas fa-wrench me-1"></i>Solucionar
+                      </button>
+
+                      <!-- Botón para ver detalles -->
+                      <button
+                        class="btn btn-outline-info btn-sm"
+                        [routerLink]="['/incidencias/detalle', i._id]"
+                        title="Veure detalls"
+                      >
+                        <i class="fas fa-eye me-1"></i>Detalls
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Mensaje cuando no hay incidencias -->
+            <div
+              *ngIf="getIncidenciesVisible().length === 0"
+              class="text-center py-5"
+            >
+              <div class="text-muted">
+                <i class="fas fa-ticket-alt fa-3x mb-3 opacity-50"></i>
+                <h5>No tens incidències</h5>
+                <p class="mb-3">
+                  No s'ha trobat cap incidencia amb els
+                  filtres aplicats.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <!-- Dashboard para Admin -->
   <div *ngIf="rol === 'admin'" class="admin-dashboard">
@@ -201,6 +969,145 @@
         </div>
       </div>
     </div>
+    <!-- Gráfico y Filtros Row -->
+    <div class="row mb-5">
+      <!-- Gráfico de Estado de Incidencias -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-chart-pie text-primary"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">
+                  Totes les Incidències
+                </h3>
+                <p class="text-muted small mb-0">Distribució per estat</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <div
+              class="chart-container"
+              style="position: relative; height: 250px"
+            >
+              <!-- Gráfico de barras simple -->
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Obertes</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-secondary"
+                        [style.width.%]="getProgressWidthAdmin('oberta')"
+                      >
+                        {{ getIncidenciasByEstado('oberta') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Assignades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-warning"
+                        [style.width.%]="getProgressWidthAdmin('assignada')"
+                      >
+                        {{ getIncidenciasByEstado('assignada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Solucionades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-info"
+                        [style.width.%]="getProgressWidthAdmin('solucionada')"
+                      >
+                        {{ getIncidenciasByEstado('solucionada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div class="flex-shrink-0 me-3" style="width: 80px">
+                    <small class="text-muted">Tancades</small>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="progress" style="height: 25px">
+                      <div
+                        class="progress-bar bg-success"
+                        [style.width.%]="getProgressWidthAdmin('tancada')"
+                      >
+                        {{ getIncidenciasByEstado('tancada') }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de Filtros y Acciones -->
+      <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-header bg-white border-0 pb-0">
+            <div class="d-flex align-items-center">
+              <div
+                class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center me-3"
+                style="width: 45px; height: 45px"
+              >
+                <i class="fas fa-filter text-info"></i>
+              </div>
+              <div>
+                <h3 class="card-title h5 mb-1 fw-bold">Filtres i Accions</h3>
+                <p class="text-muted small mb-0">
+                  Gestiona les teves incidències
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-3">
+            <!-- Filtros -->
+
+            <div class="mb-3" *ngIf="vistaActual === 'totes'">
+              <label class="form-label small fw-semibold text-muted"
+                >Filtrar per Estat:</label
+              >
+              <select class="form-select" [(ngModel)]="filtroEstado">
+                <option value="">Tots els estats</option>
+                <option value="oberta">Obertes</option>
+                <option value="assignada">Assignades</option>
+                <option value="solucionada">Solucionades</option>
+                <option value="tancada">Tancades</option>
+              </select>
+            </div>
+
+            <!-- Contador de incidencias -->
+            <div class="alert alert-info mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              <strong>{{ getIncidenciesVisible().length }}</strong> incidències
+              trobades
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Lista completa de incidencias -->
     <div class="row">
@@ -225,14 +1132,6 @@
                     Gestió completa del sistema
                   </p>
                 </div>
-              </div>
-              <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm">
-                  <i class="fas fa-filter me-1"></i>Filtrar
-                </button>
-                <button class="btn btn-outline-secondary btn-sm">
-                  <i class="fas fa-download me-1"></i>Exportar
-                </button>
               </div>
             </div>
           </div>
@@ -265,7 +1164,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let i of incidencias" class="border-bottom">
+                  <tr
+                    *ngFor="let i of getIncidenciesVisible()"
+                    class="border-bottom"
+                  >
                     <td class="py-3">
                       <div class="fw-semibold">{{ i.titulo }}</div>
                     </td>
@@ -341,11 +1243,29 @@
                       >
                         Editar
                       </button>
+                                            <!-- Botón para ver detalles -->
+                      <button
+                        class="btn btn-outline-info btn-sm"
+                        [routerLink]="['/incidencias/detalle', i._id]"
+                        title="Veure detalls"
+                      >
+                        <i class="fas fa-eye me-1"></i>Detalls
+                      </button>
                     </td>
+                    
                   </tr>
                 </tbody>
               </table>
             </div>
+                      <!-- Mensaje cuando no hay incidencias -->
+          <div *ngIf="getIncidenciesVisible().length === 0" class="text-center py-5">
+            <div class="text-muted">
+              <i class="fas fa-ticket-alt fa-3x mb-3 opacity-50"></i>
+              <h5>No tens incidències</h5>
+              <p class="mb-3">No s'ha trobat cap incidencia amb els
+                  filtres aplicats.</p>
+            </div>
+          </div>
           </div>
         </div>
       </div>
